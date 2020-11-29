@@ -3,7 +3,7 @@ const session = require('koa-session-minimal')
 const MysqlStore = require('koa-mysql-session')
 const koaBody = require('koa-body')
 const logger = require('koa-logger')
-const {host, port} = require('./config')
+const {host, port, database} = require('./config')
 
 const app = new Koa()
 
@@ -23,6 +23,8 @@ app.use(
 
 app.use(koaBody())
 app.use(logger())
+
+app.use(require('./router/user').routes());
 
 app.listen(port, () => {
     console.log(`http://${host}:${port}`)
