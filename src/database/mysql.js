@@ -37,3 +37,30 @@ const createTable = (sql) => {
 // 创建表
 createTable(users)
 
+/**
+ * 用户注册
+ * @param val 传入参数
+ */
+exports.insterUserData = (val) => {
+    const _sql = 'insert into users set user_id=?, username=?, password=?, create_at=?;'
+    return query(_sql, val)
+}
+
+/**
+ * 用户登录
+ * @param {string} username 用户名
+ * @param {string} password 密码
+ */
+exports.findUser = (username, password) => {
+    const _sql = `select * from users where username='${username}' and password='${password}';`
+    return query(_sql)
+} 
+
+/**
+ * 查询用户名唯一性
+ */
+exports.findOnesUser = (username) => {
+    const _sql = `select * from users where username='${username}';`
+    return query(_sql)
+}
+
