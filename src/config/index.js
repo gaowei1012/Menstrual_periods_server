@@ -27,9 +27,10 @@ const config = {
         PORT: '3306',
         HOST: 'rm-bp1s504lsy6224fa94m.mysql.rds.aliyuncs.com',
     },
-    token: {
-        tokenExpiresTime: 1000 * 60 * 60 * 24 * 7,
-        jwtSecret: 'jwtSecret',
+    redisbase: {
+        DB: 'menstrual',
+        PORT: 6379,
+        HOST: '39.99.241.232'
     },
     oss: {
         // 阿里云oss对象存储

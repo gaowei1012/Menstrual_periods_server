@@ -11,6 +11,7 @@
   "dependencies": {
     "crypto-js": "^4.0.0",
     "husky": "^4.3.0",
+    "ioredis": "^4.19.4",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",

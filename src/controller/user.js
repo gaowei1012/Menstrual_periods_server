@@ -1,6 +1,9 @@
 const UserModal = require('../database/mysql')
 const {genPassword} = require('../utils/crypto')
+const {secret} = require('../utils/secret')
+const redis = require('../utils/redis')
 const {v4: uuidv4} = require('uuid')
+const jwt = require('jsonwebtoken')
 
 exports.test = async = (ctx, next) => {
     ctx.body = {
@@ -69,7 +72,14 @@ exports.register = async (ctx, next) => {
  */
 exports.login = async (ctx, next) => {
     const {username, password} = ctx.request.body
-    if (username === '' || password === '') {
+    const payload = {username:username,time:new Date().getTime(),timeout:1000*60*60*2}
+    const token = jwt.sign(payload, secret)
+    if (username === undefined || password === undefined) {
+        ctx.body = {
+            code: -1,
+            message: '用户名密码不能为空',
+        }
+    } else if (username === '' || password === '') {
         ctx.body = {
             code: -1,
             message: '缺少必传参数',
@@ -77,13 +87,14 @@ exports.login = async (ctx, next) => {
     } else {
         await UserModal.findUser(username, genPassword(password))
             .then((result) => {
+                redis.set('token', token)
                 ctx.body = {
                     code: 200,
                     message: '登录成功',
                     data: [
                         {
-                            _id: result[0].id,
                             user_id: result[0].user_id,
+                            token: token,
                             username: result[0].username,
                             create_at: result[0].create_at,
                         },
