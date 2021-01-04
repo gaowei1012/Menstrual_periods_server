@@ -64,3 +64,12 @@ exports.findOnesUser = (username) => {
     return query(_sql)
 }
 
+/**
+ * 查询用户是否存在
+ * @param {string} user_id 用户id
+ */
+exports.findOnesUserID = (user_id) => {
+    const _sql = `select * from users where user_id='${user_id}';`
+    return query(_sql)
+ }
+

@@ -22,10 +22,10 @@ const config = {
     host: IPAdress,
     database: {
         DATABASE: 'menstrual',
-        USERNAME: 'root',
-        PASSWORD: 'gao129231wei',
+        USERNAME: 'gaowei',
+        PASSWORD: '*Gao129231wei*',
         PORT: '3306',
-        HOST: '127.0.0.1',
+        HOST: 'rm-bp1s504lsy6224fa94m.mysql.rds.aliyuncs.com',
     },
     token: {
         tokenExpiresTime: 1000 * 60 * 60 * 24 * 7,

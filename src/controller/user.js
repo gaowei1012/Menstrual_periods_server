@@ -16,33 +16,49 @@ exports.test = async = (ctx, next) => {
  */
 exports.register = async (ctx, next) => {
     const {username, password} = ctx.request.body
+    console.log(username)
     let create_at = new Date().toString()
     let user_id = uuidv4()
-    if (username === '' || password === '') {
+    if (username === undefined || password === undefined) {
+        ctx.body = {
+            code: -1,
+            message: '用户名密码不能为空',
+        }
+    } else if (username === '' || password === '') {
         ctx.body = {
             code: -1,
             message: '缺少必传参数',
         }
     } else {
-        await UserModal.insterUserData([
-            user_id,
-            username,
-            genPassword(password),
-            create_at,
-        ])
-            .then((result) => {
-                ctx.body = {
-                    code: 200,
-                    message: '注册成功',
-                }
-            })
-            .catch((err) => {
-                ctx.body = {
-                    code: 500,
-                    message: '注册失败',
-                }
-            })
-        await next()
+        // 检查用户名是否被注册过
+        const result = await UserModal.findOnesUser(username)
+        if (result.length !== 0) {
+            ctx.body = {
+                code: -2,
+                message: '用户名重复',
+            }
+        } else {
+            await UserModal.insterUserData([
+                user_id,
+                username,
+                genPassword(password),
+                create_at,
+            ])
+                .then((result) => {
+                    ctx.body = {
+                        code: 200,
+                        message: '注册成功',
+                    }
+                })
+                .catch((err) => {
+                    ctx.body = {
+                        code: 500,
+                        message: '注册失败',
+                    }
+                })
+
+            await next()
+        }
     }
 }
 
