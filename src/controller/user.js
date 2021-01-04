@@ -1,6 +1,7 @@
 const UserModal = require('../database/mysql')
 const {genPassword} = require('../utils/crypto')
 const {secret} = require('../utils/secret')
+const moment = require('moment')
 const redis = require('../utils/redis')
 const {v4: uuidv4} = require('uuid')
 const jwt = require('jsonwebtoken')
@@ -19,9 +20,8 @@ exports.test = async = (ctx, next) => {
  */
 exports.register = async (ctx, next) => {
     const {username, password} = ctx.request.body
-    console.log(username)
-    let create_at = new Date().toString()
-    let user_id = uuidv4()
+    const create_at = moment().format()
+    const user_id = uuidv4()
     if (username === undefined || password === undefined) {
         ctx.body = {
             code: -1,
@@ -111,3 +111,26 @@ exports.login = async (ctx, next) => {
         await next()
     }
 }
+
+/**
+ * 用户登出
+ * 只能调取一次
+ * @param {*} ctx 
+ * @param {*} next 
+ */
+exports.logout = async (ctx, next) => {
+    const del = await redis.del('token')
+    if (del === 1) {
+        ctx.body = {
+            code: 200,
+            message: '退出成功'
+        }
+    } else if (del === 0) {
+        ctx.body = {
+            code: -1,
+            message: '已登出，或者退出失败'
+        }
+    }
+
+    await next()
+} 
